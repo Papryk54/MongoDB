@@ -1,41 +1,33 @@
-const express = require("express");
-const cors = require("cors");
-const { MongoClient } = require("mongodb");
+const express = require('express');
+const cors = require('cors');
+const mongoose = require('mongoose');
+
+const employeesRoutes = require('./routes/employees.routes');
+const departmentsRoutes = require('./routes/departments.routes');
+const productsRoutes = require('./routes/products.routes');
+
 const app = express();
 
-const uri = "mongodb://localhost:27017";
-const client = new MongoClient(uri);
+app.use(cors());
+app.use(express.json());
+app.use(express.urlencoded({ extended: false }));
 
-async function start() {
-	try {
-		await client.connect();
-		console.log("Successfully connected to the database");
-		const db = client.db("companyDB");
-		app.locals.db = db;
+app.use('/api', employeesRoutes);
+app.use('/api', departmentsRoutes);
+app.use('/api', productsRoutes);
 
-		app.use(cors());
-		app.use(express.json());
-		app.use(express.urlencoded({ extended: false }));
+app.use((req, res) => {
+  res.status(404).send({ message: 'Not found...' });
+})
 
-		const employeesRoutes = require("./routes/employees.routes");
-		const departmentsRoutes = require("./routes/departments.routes");
-		const productsRoutes = require("./routes/products.routes");
+mongoose.connect('mongodb://0.0.0.0:27017/companyDB', { useNewUrlParser: true });
+const db = mongoose.connection;
 
-		app.use((req, res, next) => { // a to wszystko robimy po to żebyśmy mogli w każdym pliku odwołać się do db bez tego const db = client.db("companyDB");
-			req.db = db;
-			next(); //Potrzebne tylko kiedy modyfiujemy req
-		});
-		app.use("/api/employees", employeesRoutes);
-		app.use("/api/departments", departmentsRoutes);
-		app.use("/api/products", productsRoutes);
+db.once('open', () => {
+  console.log('Connected to the database');
+});
+db.on('error', err => console.log('Error ' + err));
 
-		app.use((req, res) => res.status(404).send({ message: "Not found..." }));
-
-		app.listen(8000, () => console.log("Server is running on port 8000"));
-	} catch (err) {
-		console.error("DB connection error:", err);
-		process.exit(1);
-	}
-}
-
-start();
+app.listen('8000', () => {
+  console.log('Server is running on port: 8000');
+});
