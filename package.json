@@ -1,16 +1,19 @@
 {
-  "name": "ComapnyApp",
-  "version": "1.0.0",
-  "main": "index.js",
-  "license": "MIT",
-  "scripts": {
-    "start": "nodemon server.js"
-  },
-  "dependencies": {
-    "cors": "^2.8.5",
-    "express": "^4.17.1",
-    "mongodb": "^6.16.0",
-    "mongoose": "^8.14.1",
-    "nodemon": "^1.19.1"
-  }
+	"name": "ComapnyApp",
+	"version": "1.0.0",
+	"main": "index.js",
+	"license": "MIT",
+	"scripts": {
+		"start": "nodemon server.js",
+		"test": "mocha --watch \"./{,!(node_modules)/**/}*.test.js\""
+	},
+	"dependencies": {
+		"chai": "4.2.0",
+		"cors": "^2.8.5",
+		"express": "^4.17.1",
+		"mocha": "6.2.1",
+		"mongodb": "^6.16.0",
+		"mongoose": "^8.14.1",
+		"nodemon": "^1.19.1"
+	}
 }
