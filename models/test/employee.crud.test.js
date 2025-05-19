@@ -4,6 +4,8 @@ const Employee = require("../employee.model");
 const Department = require("../department.model");
 
 describe("Employee", () => {
+	let dep1, dep2;
+
 	before(async () => {
 		try {
 			await mongoose.connect("mongodb://localhost:27017/companyDBtest", {
@@ -14,8 +16,6 @@ describe("Employee", () => {
 			console.error(err);
 		}
 	});
-
-	let dep1, dep2;
 
 	before(async () => {
 		await Department.deleteMany();

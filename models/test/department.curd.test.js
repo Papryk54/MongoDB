@@ -14,6 +14,15 @@ describe("Department", () => {
 		}
 	});
 
+	after(async () => {
+		try {
+			await Department.deleteMany();
+			await mongoose.connection.close();
+		} catch (err) {
+			console.error(err);
+		}
+	});
+
 	before(async () => {
 		const testDepOne = new Department({ name: "Department #1" });
 		await testDepOne.save();
@@ -30,15 +39,6 @@ describe("Department", () => {
 	it('should return a proper document by "name" with "findOne" method', async () => {
 		const department = await Department.findOne({ name: "Department #1" });
 		expect(department.name).to.equal("Department #1");
-	});
-
-	after(async () => {
-		try {
-			await Department.deleteMany();
-			await mongoose.connection.close();
-		} catch (err) {
-			console.error(err);
-		}
 	});
 
 	describe("Creating data", () => {
@@ -59,6 +59,7 @@ describe("Department", () => {
 			await Department.deleteMany();
 		});
 	});
+
 	describe("Updating data", () => {
 		beforeEach(async () => {
 			const testDepOne = new Department({ name: "Department #1" });
@@ -99,6 +100,7 @@ describe("Department", () => {
 			expect(departments[1].name).to.be.equal("Updated!");
 		});
 	});
+
 	describe("Removing data", () => {
 		beforeEach(async () => {
 			const testDepOne = new Department({ name: "Department #1" });
